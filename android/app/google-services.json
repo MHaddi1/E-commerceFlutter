@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "831412047819",
+    "project_id": "e-commerec-16efe",
+    "storage_bucket": "e-commerec-16efe.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:831412047819:android:a54d0b02e6529d1a6d704e",
+        "android_client_info": {
+          "package_name": "com.example.shopy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "831412047819-haq256mar19nk66jjm78tb6beghjonh2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3B2Eb9uw28_0zMgJqpS8xDtAInxaLMaA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "831412047819-haq256mar19nk66jjm78tb6beghjonh2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
