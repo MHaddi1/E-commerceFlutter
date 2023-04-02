@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
-
 import 'BottomNav/bottom_navigation.dart';
 
 
 class DetailScreen extends StatefulWidget {
-  String assetPath,clothprice,clothesname;
+  String assetPath,clothprice,clothesname,description;
   
  
 
-  DetailScreen({super.key, required this.assetPath, required this.clothprice, required this.clothesname});
+  DetailScreen({super.key, required this.assetPath, required this.clothprice, required this.clothesname,required this.description});
 
   @override
-  State<DetailScreen> createState() => _DetailScreenState(assetPath,clothprice,clothesname);
+  State<DetailScreen> createState() =>_DetailScreenState(assetPath,clothprice,clothesname,description);
 }
 
 class _DetailScreenState extends State<DetailScreen> {
-  String assetPath, clothprice, clothesname;
-  
-  _DetailScreenState(this.assetPath, this.clothprice, this.clothesname);
+  String assetPath, clothprice, clothesname,description;
+
+  _DetailScreenState(this.assetPath, this.clothprice, this.clothesname,this.description);
 
   
   @override
@@ -64,8 +63,8 @@ class _DetailScreenState extends State<DetailScreen> {
               FadeInImage(
                 width: 200,
                 height: 250,
-                placeholder: AssetImage(assetPath),
-                image: AssetImage(assetPath),
+                placeholder: NetworkImage(assetPath),
+                image: NetworkImage(assetPath),
               ),
             const SizedBox(height: 20.0),
             Center(
@@ -84,20 +83,30 @@ class _DetailScreenState extends State<DetailScreen> {
                       fontFamily: 'Roboto',
                       fontSize: 24.0)),
             ),
-            const SizedBox(height: 20.0),
+            const SizedBox(height: 10.0),
             Center(
               child: Container(
+                color: Colors.white,
                 width: MediaQuery.of(context).size.width - 50.0,
-                child: const Text('Cold, creamy ice cream sandwiched between delicious deluxe cookies. Pick your favorite deluxe cookies and ice cream flavor.',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                      fontFamily: 'Roboto',
-                      fontSize: 16.0,
-                      color: Color(0xFFB4B8B9))
+                child:  Container(
+                  color: Colors.grey[100],
+                  height: 90,
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Text(description,
+                      
+                      style: const TextStyle(
+                            fontFamily: 'Roboto',
+                            fontSize: 16.0,
+                            color: Colors.black45)
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),
-            const SizedBox(height: 20.0),
+            const SizedBox(height: 15.0),
             Center(
               child: Container(
                 width: MediaQuery.of(context).size.width - 50.0,

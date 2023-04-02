@@ -32,18 +32,16 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage>
-  {
+class _MyHomePageState extends State<MyHomePage> {
   Future<FirebaseApp> _intialzationFirebase() async {
     FirebaseApp firebaseApp = await Firebase.initializeApp();
     return firebaseApp;
   }
 
- 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-       debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
           body: FutureBuilder(
         future: _intialzationFirebase(),
@@ -59,6 +57,7 @@ class _MyHomePageState extends State<MyHomePage>
     );
   }
 }
+
 class Screen extends StatefulWidget {
   const Screen({super.key});
 
@@ -66,24 +65,33 @@ class Screen extends StatefulWidget {
   State<Screen> createState() => _ScreenState();
 }
 
-class _ScreenState extends State<Screen>   with SingleTickerProviderStateMixin {
-   late TabController _tabController;
+class _ScreenState extends State<Screen> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
   List<dynamic> users = [];
+  String searchQuery = '';
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
   }
+  void handleSearch(String query) {
+  setState(() {
+    searchQuery = query; // Update the searchQuery state variable
+  });
+
+  // Perform any additional search logic here
+}
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-      
         actions: [
           IconButton(
-              onPressed: () {},
+              onPressed: () {
+                // showSearch(context: context, delegate: );
+              },
               icon: const Icon(
                 Icons.search_outlined,
                 color: Colors.black,
@@ -118,26 +126,26 @@ class _ScreenState extends State<Screen>   with SingleTickerProviderStateMixin {
                 labelColor: Colors.deepOrange,
                 labelPadding: const EdgeInsets.only(right: 70),
                 unselectedLabelColor: Colors.black,
-                tabs: [
-                  const Tab(
+                tabs:const [
+                  Tab(
                     child: Text(
                       "All",
                       style: TextStyle(fontSize: 21, fontFamily: 'Roboto'),
                     ),
                   ),
-                  const Tab(
+                  Tab(
                     child: Text(
                       "Mens",
                       style: TextStyle(fontSize: 21, fontFamily: 'Roboto'),
                     ),
                   ),
-                  const Tab(
+                  Tab(
                     child: Text(
                       "Womens",
                       style: TextStyle(fontSize: 21, fontFamily: 'Roboto'),
                     ),
                   ),
-                  const Tab(
+                  Tab(
                     child: Text(
                       "Kids",
                       style: TextStyle(fontSize: 21, fontFamily: 'Roboto'),
@@ -150,11 +158,11 @@ class _ScreenState extends State<Screen>   with SingleTickerProviderStateMixin {
                 width: double.infinity,
                 child: TabBarView(
                   controller: _tabController,
-                  children: [
-                    const All(),
-                    const All(),
-                    const All(),
-                    const All()
+                  children: const [
+                    All(),
+                    All(),
+                    All(),
+                    All()
                   ],
                 ),
               )

@@ -1,8 +1,8 @@
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:shopy/Screen/detail_screen.dart';
-
-import 'package:shopy/shopy_models.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shopy/widgets/add_to_cart.dart';
+import 'package:shopy/widgets/favirate.dart';
 
 class All extends StatefulWidget {
   const All({super.key});
@@ -12,11 +12,8 @@ class All extends StatefulWidget {
 }
 
 class _AllState extends State<All> {
-  final fb = FirebaseDatabase.instance;
-
   @override
   Widget build(BuildContext context) {
-    final ref = fb.ref().child("shopping");
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -25,25 +22,35 @@ class _AllState extends State<All> {
               height: 15,
             ),
             Container(
-              padding: const EdgeInsets.only(right: 15),
-              width: MediaQuery.of(context).size.width - 30.0,
-              height: MediaQuery.of(context).size.height / 100 * 60,
-              child: GridView.count(
-                crossAxisCount: 2,
-                primary: false,
-                crossAxisSpacing: 15.0,
-                mainAxisSpacing: 10.0,
-                childAspectRatio: 0.7,
-                children: <Widget>[
-                  _buildCard("Coat", "30", "assets/images/img_1.jpg", true, true, context),
-                  _buildCard("Coat", "30", "assets/images/kid_1.jpeg", true, true, context),
-                  _buildCard("Coat", "30", "assets/images/img_1.webp", true, true, context),
-                  _buildCard("Coat", "30", "assets/images/IMG_2.jpg", true, true, context),
-                   _buildCard("Coat", "30", "assets/images/IMG_2.jpg", true, true, context),
-                  _buildCard("Coat", "30", "assets/images/img_1.webp", true, true, context)
-                
-                ],
-              ),
+              child: StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection("shopping")
+                      .snapshots(),
+                  builder: ((context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    return Container(
+                      padding: const EdgeInsets.only(right: 15),
+                      width: MediaQuery.of(context).size.width - 30.0,
+                      height: MediaQuery.of(context).size.height / 100 * 60,
+                      child: GridView.count(
+                          crossAxisCount: 2,
+                          primary: false,
+                          crossAxisSpacing: 15.0,
+                          mainAxisSpacing: 10.0,
+                          childAspectRatio: 0.7,
+                          children: List.generate(snapshot.data!.docs.length,
+                              (index) {
+                            return GridTile(
+                              child: _buildCard(
+                                  snapshot.data!.docs[index] ,context),
+                            );
+                          })),
+                    );
+                  })),
             ),
             const SizedBox(
               height: 15.0,
@@ -54,8 +61,7 @@ class _AllState extends State<All> {
     );
   }
 
-  Widget _buildCard(String name, String price, String imgPath, bool added,
-      bool isFav, context) {
+  Widget _buildCard(DocumentSnapshot snapshot, BuildContext context) {
     return Padding(
       padding:
           const EdgeInsets.only(top: 5.0, right: 5.0, left: 5.0, bottom: 5.0),
@@ -63,7 +69,10 @@ class _AllState extends State<All> {
         onTap: () {
           Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => DetailScreen(
-                  assetPath: imgPath, clothprice: price, clothesname: name)));
+                  assetPath: snapshot['image'],
+                  clothprice: snapshot['price'],
+                  clothesname: snapshot['name'],
+                  description: snapshot['description'],)));
         },
         child: Container(
           decoration: BoxDecoration(
@@ -82,37 +91,29 @@ class _AllState extends State<All> {
                 padding: const EdgeInsets.all(5.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    isFav
-                        ? const Icon(
-                            Icons.favorite,
-                            color: Colors.deepOrange,
-                          )
-                        : const Icon(
-                            Icons.favorite_border,
-                            color: Colors.deepOrange,
-                          )
+                  children: const [
+                  Favirate()
                   ],
                 ),
               ),
               FadeInImage(
                 width: 75,
                 height: 75,
-                placeholder: AssetImage(imgPath),
-                image: AssetImage(imgPath),
+                placeholder: NetworkImage(snapshot['image']),
+                image: NetworkImage(snapshot['image']),
               ),
               const SizedBox(
                 height: 7.0,
               ),
               Text(
-                price,
+                snapshot['price'].toString(),
                 style: const TextStyle(
                     color: Colors.deepOrange,
                     fontFamily: 'Roboto',
                     fontSize: 15),
               ),
               Text(
-                name,
+                snapshot['name'],
                 style: const TextStyle(
                     fontFamily: 'Roboto',
                     fontSize: 15,
@@ -130,30 +131,8 @@ class _AllState extends State<All> {
                 padding: const EdgeInsets.only(left: 5.0, right: 5.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    if (!added) ...[
-                      const Icon(
-                        Icons.shopping_basket,
-                        color: Colors.deepOrange,
-                        size: 14,
-                      ),
-                      const Text(
-                        "Add To Cart",
-                        style: TextStyle(fontSize: 12.0),
-                      )
-                    ],
-                    if (added) ...[
-                      const Icon(Icons.remove_circle_outline,
-                          color: Colors.deepOrange, size: 12.0),
-                      const Text('3',
-                          style: TextStyle(
-                              fontFamily: 'Roboto',
-                              color: Colors.deepOrange,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12.0)),
-                      const Icon(Icons.add_circle_outline,
-                          color: Colors.deepOrange, size: 12.0),
-                    ]
+                  children: const [
+                   AddTOCart()
                   ],
                 ),
               ),
